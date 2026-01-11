@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CBT Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-title {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .admin-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .btn-logout {
+            padding: 8px 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .tabs-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .tabs-header {
+            display: flex;
+            gap: 5px;
+            padding: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            overflow-x: auto;
+        }
+        
+        .tab-btn {
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .tab-content {
+            padding: 30px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 20px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .image-upload {
+            border: 2px dashed #667eea;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload:hover {
+            background: #f0f4ff;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .btn-action {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .message-box {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .preview-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview-logo {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .preview-title {
+            color: #333;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        
+        .preview-school {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .soal-item {
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+        
+        .soal-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .soal-image {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .soal-options {
+            margin-left: 20px;
+        }
+        
+        .soal-option {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .soal-correct {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <div class="header-title">Admin Panel CBT Online</div>
+        <div class="admin-info">
+            <span class="admin-name" id="adminName">Administrator</span>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+    </div>
+    
+    <div class="admin-container">
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="showTab('tabDashboard')">Dashboard</button>
+                <button class="tab-btn" onclick="showTab('tabSiswa')">Data Siswa</button>
+                <button class="tab-btn" onclick="showTab('tabMapel')">Mata Pelajaran</button>
+                <button class="tab-btn" onclick="showTab('tabSoal')">Bank Soal</button>
+                <button class="tab-btn" onclick="showTab('tabPengaturan')">Pengaturan</button>
+                <button class="tab-btn" onclick="showTab('tabHasil')">Hasil Ujian</button>
+            </div>
+            
+            <!-- Tab Dashboard -->
+            <div id="tabDashboard" class="tab-content active">
+                <div class="admin-card">
+                    <h2 class="card-title">Dashboard Administrator</h2>
+                    <p>Selamat datang di panel administrasi CBT Online. Pilih menu di atas untuk mengelola sistem.</p>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <h3>Statistik Sistem</h3>
+                            <div id="statsContainer" style="margin-top: 20px;">
+                                <p>Memuat statistik...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-action btn-primary" onclick="testConnection()">Test Koneksi Database</button>
+                    <div id="testMessage" class="message-box"></div>
+                </div>
+            </div>
+            
+            <!-- Tab Data Siswa -->
+            <div id="tabSiswa" class="tab-content">
+                <div class="admin-card">
+                    <h2 class="card-title">Tambah Siswa Baru</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nama Lengkap Siswa</label>
+                            <input type="text" id="namaSiswa" placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="usernameSiswa" placeholder="Buat username unik">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="passwordSiswa" placeholder="Buat password">
+                        </div>
+                    </div>
+                    <button class="btn-action btn-primary" onclick="tambahSiswa()">Tambah Siswa</button>
+                    <div id="messageSiswa" class="message-box"></div>
+                </div>
+                
+                <div class="admin-card">
+                    <h2 class="card-title">Daftar Siswa</h2>
+                    <table class="data-table" id="tableSiswa">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Username</th>
+                                <th>Nama Lengkap</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="siswaList">
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn-action btn-secondary" onclick="loadSiswa()" style="margin-top: 15px;">
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Tab Mata Pelajaran -->
+            <div id="tabMapel" class="tab-content">
+                <div class="admin-card">
+                    <h2 class="card-title">Tambah Mata Pelajaran</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nama Mata Pelajaran</label>
+                            <input type="text" id="namaMapel" placeholder="Contoh: Matematika, Fisika, Bahasa Indonesia">
+                        </div>
+                        <div class="form-group">
+                            <label>Waktu Ujian (menit)</label>
+                            <input type="number" id="waktuMapel" value="90" min="1" max="180">
+                            <small style="color: #666;">Default: 90 menit</small>
+                        </div>
+                    </div>
+                    <button class="btn-action btn-primary" onclick="tambahMapel()">Tambah Mata Pelajaran</button>
+                    <div id="messageMapel" class="message-box"></div>
+                </div>
+                
+                <div class="admin-card">
+                    <h2 class="card-title">Daftar Mata Pelajaran</h2>
+                    <table class="data-table" id="tableMapel">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Waktu (menit)</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mapelList">
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Tab Bank Soal -->
+            <div id="tabSoal" class="tab-content">
+                <div class="admin-card">
+                    <h2 class="card-title">Tambah Soal Baru</h2>
+                    
+                    <div class="form-group">
+                        <label>Pilih Mata Pelajaran</label>
+                        <select id="mapelSoal" onchange="loadSoalByMapel()">
+                            <option value="">-- Pilih Mata Pelajaran --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Teks Soal</label>
+                        <textarea id="textSoal" placeholder="Tulis soal di sini..." rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Gambar Soal (Opsional)</label>
+                        <div class="image-upload" onclick="document.getElementById('gambarSoal').click()">
+                            <p>Klik untuk upload gambar</p>
+                            <p style="font-size: 12px; color: #666;">Format: JPG, PNG. Maks: 2MB</p>
+                            <input type="file" id="gambarSoal" accept="image/*" style="display: none;" onchange="previewSoalImage()">
+                        </div>
+                        <img id="previewSoalImage" class="image-preview" alt="Preview gambar soal">
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Pilihan A</label>
+                            <input type="text" id="pilihanA" placeholder="Jawaban pilihan A">
+                        </div>
+                        <div class="form-group">
+                            <label>Pilihan B</label>
+                            <input type="text" id="pilihanB" placeholder="Jawaban pilihan B">
+                        </div>
+                        <div class="form-group">
+                            <label>Pilihan C</label>
+                            <input type="text" id="pilihanC" placeholder="Jawaban pilihan C">
+                        </div>
+                        <div class="form-group">
+                            <label>Pilihan D</label>
+                            <input type="text" id="pilihanD" placeholder="Jawaban pilihan D">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Jawaban Benar</label>
+                        <select id="jawabanBenar">
+                            <option value="A">Pilihan A</option>
+                            <option value="B">Pilihan B</option>
+                            <option value="C">Pilihan C</option>
+                            <option value="D">Pilihan D</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-action btn-primary" onclick="tambahSoal()">Simpan Soal</button>
+                    <button class="btn-action btn-secondary" onclick="resetSoalForm()">Reset Form</button>
+                    <div id="messageSoal" class="message-box"></div>
+                </div>
+                
+                <div class="admin-card">
+                    <h2 class="card-title">Daftar Soal</h2>
+                    <div id="soalListContainer">
+                        <p>Pilih mata pelajaran untuk melihat soal</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab Pengaturan -->
+            <div id="tabPengaturan" class="tab-content">
+                <div class="admin-card">
+                    <h2 class="card-title">Pengaturan Website</h2>
+                    
+                    <div class="form-group">
+                        <label>Logo Sekolah</label>
+                        <div class="image-upload" onclick="document.getElementById('logoUpload').click()">
+                            <p>Klik untuk upload logo baru</p>
+                            <p style="font-size: 12px; color: #666;">Format: JPG, PNG. Rekomendasi: 150x150px</p>
+                            <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="previewLogoImage()">
+                        </div>
+                        <img id="previewLogo" class="image-preview" alt="Preview logo">
+                        <p style="margin-top: 10px; color: #666;">Atau masukkan URL logo:</p>
+                        <input type="text" id="logoUrl" placeholder="https://example.com/logo.png" style="margin-top: 5px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nama Sekolah</label>
+                        <input type="text" id="namaSekolah" placeholder="Masukkan nama sekolah lengkap">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Judul Website</label>
+                        <input type="text" id="judulWebsite" placeholder="Masukkan judul website">
+                    </div>
+                    
+                    <button class="btn-action btn-primary" onclick="simpanPengaturan()">Simpan Pengaturan</button>
+                    <div id="messagePengaturan" class="message-box"></div>
+                    
+                    <div class="preview-box">
+                        <h3>Preview Tampilan</h3>
+                        <img id="previewLogoImg" class="preview-logo" alt="Logo sekolah">
+                        <div class="preview-title" id="previewJudul">CBT ONLINE</div>
+                        <div class="preview-school" id="previewSekolah">SEKOLAH MENENGAH ATAS</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tab Hasil Ujian -->
+            <div id="tabHasil" class="tab-content">
+                <div class="admin-card">
+                    <h2 class="card-title">Hasil Ujian Siswa</h2>
+                    
+                    <div class="form-group">
+                        <label>Filter berdasarkan:</label>
+                        <select id="filterHasil" onchange="filterHasilUjian()">
+                            <option value="all">Semua Hasil</option>
+                            <option value="today">Hari Ini</option>
+                            <option value="week">Minggu Ini</option>
+                            <option value="month">Bulan Ini</option>
+                        </select>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Nilai</th>
+                                <th>Tanggal</th>
+                                <th>Waktu</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hasilUjianList">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Memuat data hasil ujian...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <button class="btn-action btn-secondary" onclick="loadHasilUjian()" style="margin-top: 15px;">
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // VARIABEL GLOBAL
+        // ============================================
+        let currentImageBase64 = '';
+        let currentSoalImageBase64 = '';
+        
+        // ============================================
+        // FUNGSI UTAMA TAB
+        // ============================================
+        
+        function showTab(tabId) {
+            // Sembunyikan semua tab
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+                tab.classList.remove('active');
+            });
+            
+            // Nonaktifkan semua tombol tab
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Tampilkan tab yang dipilih
+            document.getElementById(tabId).style.display = 'block';
+            document.getElementById(tabId).classList.add('active');
+            
+            // Aktifkan tombol tab
+            event.target.classList.add('active');
+            
+            // Load data berdasarkan tab
+            switch(tabId) {
+                case 'tabSiswa':
+                    loadSiswa();
+                    break;
+                case 'tabMapel':
+                    loadMapel();
+                    loadMapelForSoal();
+                    break;
+                case 'tabSoal':
+                    loadMapelForSoal();
+                    break;
+                case 'tabPengaturan':
+                    loadPengaturan();
+                    break;
+                case 'tabHasil':
+                    loadHasilUjian();
+                    break;
+                case 'tabDashboard':
+                    loadDashboardStats();
+                    break;
+            }
+        }
+        
+        // ============================================
+        // FUNGSI UTILITAS
+        // ============================================
+        
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message-box message-${type}`;
+            element.style.display = 'block';
+            
+            // Scroll ke pesan
+            element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Sembunyikan setelah 5 detik
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        function testConnection() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        showMessage('testMessage', `✅ Koneksi berhasil! Terhubung ke ${response.sheetCount} sheet`, 'success');
+                    } else {
+                        showMessage('testMessage', `❌ Error: ${response.message}`, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('testMessage', `❌ Error: ${error}`, 'error');
+                })
+                .testConnection();
+        }
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+        
+        // ============================================
+        // FUNGSI DASHBOARD
+        // ============================================
+        
+        function loadDashboardStats() {
+            // Untuk sekarang, tampilkan info sederhana
+            const statsContainer = document.getElementById('statsContainer');
+            statsContainer.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px;">
+                        <h3 style="margin: 0 0 10px 0;">Total Siswa</h3>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">-</p>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 20px; border-radius: 10px;">
+                        <h3 style="margin: 0 0 10px 0;">Mata Pelajaran</h3>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">-</p>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 20px; border-radius: 10px;">
+                        <h3 style="margin: 0 0 10px 0;">Total Soal</h3>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">-</p>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); color: white; padding: 20px; border-radius: 10px;">
+                        <h3 style="margin: 0 0 10px 0;">Ujian Selesai</h3>
+                        <p style="font-size: 24px; font-weight: bold; margin: 0;">-</p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ============================================
+        // FUNGSI SISWA
+        // ============================================
+        
+        function tambahSiswa() {
+            const nama = document.getElementById('namaSiswa').value.trim();
+            const username = document.getElementById('usernameSiswa').value.trim();
+            const password = document.getElementById('passwordSiswa').value.trim();
+            
+            if (!nama || !username || !password) {
+                showMessage('messageSiswa', 'Harap isi semua field!', 'error');
+                return;
+            }
+            
+            if (password.length < 4) {
+                showMessage('messageSiswa', 'Password minimal 4 karakter!', 'error');
+                return;
+            }
+            
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        showMessage('messageSiswa', response.message, 'success');
+                        // Reset form
+                        document.getElementById('namaSiswa').value = '';
+                        document.getElementById('usernameSiswa').value = '';
+                        document.getElementById('passwordSiswa').value = '';
+                        // Refresh data
+                        loadSiswa();
+                    } else {
+                        showMessage('messageSiswa', response.message, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('messageSiswa', 'Error: ' + error, 'error');
+                })
+                .addUser(username, password, nama);
+        }
+        
+        function loadSiswa() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(users) {
+                    const tbody = document.getElementById('siswaList');
+                    
+                    if (users.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Belum ada data siswa</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = '';
+                    users.forEach((user, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${user.username}</td>
+                            <td>${user.nama}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="editSiswa('${user.id}', '${user.username}', '${user.nama}')">
+                                        Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="hapusSiswa('${user.id}', '${user.username}')">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .withFailureHandler(function(error) {
+                    const tbody = document.getElementById('siswaList');
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #dc3545;">
+                                Error loading data: ${error}
+                            </td>
+                        </tr>
+                    `;
+                })
+                .getAllUsers();
+        }
+        
+        // ============================================
+        // FUNGSI MATA PELAJARAN
+        // ============================================
+        
+        function tambahMapel() {
+            const nama = document.getElementById('namaMapel').value.trim();
+            const waktu = document.getElementById('waktuMapel').value;
+            
+            if (!nama) {
+                showMessage('messageMapel', 'Harap isi nama mata pelajaran!', 'error');
+                return;
+            }
+            
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        showMessage('messageMapel', response.message, 'success');
+                        // Reset form
+                        document.getElementById('namaMapel').value = '';
+                        // Refresh data
+                        loadMapel();
+                        loadMapelForSoal();
+                    } else {
+                        showMessage('messageMapel', response.message, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('messageMapel', 'Error: ' + error, 'error');
+                })
+                .addMapel(nama, waktu);
+        }
+        
+        function loadMapel() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(mapelList) {
+                    const tbody = document.getElementById('mapelList');
+                    
+                    if (mapelList.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Belum ada mata pelajaran</td>
+                            </tr>
+                        `;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = '';
+                    mapelList.forEach((mapel, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${mapel.nama_mapel}</td>
+                            <td>${mapel.waktu_menit}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn btn-edit" onclick="editMapel('${mapel.id}', '${mapel.nama_mapel}', '${mapel.waktu_menit}')">
+                                        Edit
+                                    </button>
+                                    <button class="action-btn btn-delete" onclick="hapusMapel('${mapel.id}', '${mapel.nama_mapel}')">
+                                        Hapus
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .getAllMapel();
+        }
+        
+        function loadMapelForSoal() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(mapelList) {
+                    const select = document.getElementById('mapelSoal');
+                    select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+                    
+                    mapelList.forEach(mapel => {
+                        const option = document.createElement('option');
+                        option.value = mapel.id;
+                        option.textContent = mapel.nama_mapel;
+                        select.appendChild(option);
+                    });
+                })
+                .getAllMapel();
+        }
+        
+        // ============================================
+        // FUNGSI SOAL
+        // ============================================
+        
+        function previewSoalImage() {
+            const fileInput = document.getElementById('gambarSoal');
+            const preview = document.getElementById('previewSoalImage');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                
+                // Validasi ukuran file (max 2MB)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 2MB!');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    currentSoalImageBase64 = e.target.result;
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        async function tambahSoal() {
+            const mapelId = document.getElementById('mapelSoal').value;
+            const soal = document.getElementById('textSoal').value.trim();
+            const pilihan_a = document.getElementById('pilihanA').value.trim();
+            const pilihan_b = document.getElementById('pilihanB').value.trim();
+            const pilihan_c = document.getElementById('pilihanC').value.trim();
+            const pilihan_d = document.getElementById('pilihanD').value.trim();
+            const jawaban_benar = document.getElementById('jawabanBenar').value;
+            
+            // Validasi
+            if (!mapelId) {
+                showMessage('messageSoal', 'Pilih mata pelajaran terlebih dahulu!', 'error');
+                return;
+            }
+            
+            if (!soal) {
+                showMessage('messageSoal', 'Teks soal tidak boleh kosong!', 'error');
+                return;
+            }
+            
+            if (!pilihan_a || !pilihan_b || !pilihan_c || !pilihan_d) {
+                showMessage('messageSoal', 'Semua pilihan jawaban harus diisi!', 'error');
+                return;
+            }
+            
+            let gambarUrl = '';
+            
+            // Jika ada gambar yang diupload
+            if (currentSoalImageBase64) {
+                try {
+                    const fileName = `soal_${Date.now()}.jpg`;
+                    
+                    gambarUrl = await new Promise((resolve, reject) => {
+                        google.script.run.withSuccessHandler().withFailureHandler()
+                            .withSuccessHandler(resolve)
+                            .withFailureHandler(reject)
+                            .uploadImageToDrive(currentSoalImageBase64, fileName);
+                    });
+                    
+                } catch (error) {
+                    showMessage('messageSoal', 'Error upload gambar: ' + error, 'error');
+                    return;
+                }
+            }
+            
+            // Simpan soal
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        showMessage('messageSoal', response.message, 'success');
+                        resetSoalForm();
+                        loadSoalByMapel();
+                    } else {
+                        showMessage('messageSoal', response.message, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('messageSoal', 'Error: ' + error, 'error');
+                })
+                .addSoal(mapelId, soal, gambarUrl, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawaban_benar);
+        }
+        
+        function resetSoalForm() {
+            document.getElementById('textSoal').value = '';
+            document.getElementById('pilihanA').value = '';
+            document.getElementById('pilihanB').value = '';
+            document.getElementById('pilihanC').value = '';
+            document.getElementById('pilihanD').value = '';
+            document.getElementById('gambarSoal').value = '';
+            document.getElementById('previewSoalImage').style.display = 'none';
+            currentSoalImageBase64 = '';
+        }
+        
+        function loadSoalByMapel() {
+            const mapelId = document.getElementById('mapelSoal').value;
+            if (!mapelId) return;
+            
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(soalList) {
+                    const container = document.getElementById('soalListContainer');
+                    
+                    if (soalList.length === 0) {
+                        container.innerHTML = '<p style="color: #666; text-align: center;">Belum ada soal untuk mata pelajaran ini</p>';
+                        return;
+                    }
+                    
+                    let html = '<h3 style="margin-bottom: 20px;">Daftar Soal</h3>';
+                    soalList.forEach((soal, index) => {
+                        html += `
+                            <div class="soal-item">
+                                <div class="soal-text"><strong>Soal ${index + 1}:</strong> ${soal.soal}</div>
+                                ${soal.gambar ? `<img src="${soal.gambar}" class="soal-image" alt="Gambar soal">` : ''}
+                                <div class="soal-options">
+                                    <div class="soal-option ${soal.jawaban_benar === 'A' ? 'soal-correct' : ''}">A. ${soal.pilihan_a}</div>
+                                    <div class="soal-option ${soal.jawaban_benar === 'B' ? 'soal-correct' : ''}">B. ${soal.pilihan_b}</div>
+                                    <div class="soal-option ${soal.jawaban_benar === 'C' ? 'soal-correct' : ''}">C. ${soal.pilihan_c}</div>
+                                    <div class="soal-option ${soal.jawaban_benar === 'D' ? 'soal-correct' : ''}">D. ${soal.pilihan_d}</div>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                                    <button class="action-btn btn-edit" onclick="editSoal('${soal.id}')" style="margin-right: 5px;">Edit</button>
+                                    <button class="action-btn btn-delete" onclick="hapusSoal('${soal.id}')">Hapus</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    container.innerHTML = html;
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Error loading soal:', error);
+                    document.getElementById('soalListContainer').innerHTML = 
+                        `<p style="color: #dc3545;">Error: ${error}</p>`;
+                })
+                .getSoalByMapel(mapelId);
+        }
+        
+        // ============================================
+        // FUNGSI PENGATURAN
+        // ============================================
+        
+        function previewLogoImage() {
+            const fileInput = document.getElementById('logoUpload');
+            const preview = document.getElementById('previewLogo');
+            const previewImg = document.getElementById('previewLogoImg');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                
+                // Validasi ukuran file
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Ukuran file maksimal 5MB!');
+                    fileInput.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    previewImg.src = e.target.result;
+                    currentImageBase64 = e.target.result;
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        async function simpanPengaturan() {
+            const logoUrl = document.getElementById('logoUrl').value.trim();
+            const namaSekolah = document.getElementById('namaSekolah').value.trim();
+            const judulWebsite = document.getElementById('judulWebsite').value.trim();
+            
+            if (!namaSekolah || !judulWebsite) {
+                showMessage('messagePengaturan', 'Nama sekolah dan judul website harus diisi!', 'error');
+                return;
+            }
+            
+            let finalLogoUrl = logoUrl;
+            
+            // Jika ada upload gambar baru
+            if (currentImageBase64) {
+                try {
+                    const fileName = `logo_sekolah_${Date.now()}.jpg`;
+                    
+                    finalLogoUrl = await new Promise((resolve, reject) => {
+                        google.script.run.withSuccessHandler().withFailureHandler()
+                            .withSuccessHandler(resolve)
+                            .withFailureHandler(reject)
+                            .uploadImageToDrive(currentImageBase64, fileName);
+                    });
+                    
+                } catch (error) {
+                    showMessage('messagePengaturan', 'Error upload gambar: ' + error, 'error');
+                    return;
+                }
+            }
+            
+            // Simpan semua pengaturan
+            const settings = [
+                { jenis: 'logo_url', nilai: finalLogoUrl },
+                { jenis: 'nama_sekolah', nilai: namaSekolah },
+                { jenis: 'judul_website', nilai: judulWebsite }
+            ];
+            
+            let completed = 0;
+            let hasError = false;
+            
+            settings.forEach(item => {
+                google.script.run.withSuccessHandler().withFailureHandler()
+                    .withSuccessHandler(function(response) {
+                        completed++;
+                        if (completed === settings.length && !hasError) {
+                            showMessage('messagePengaturan', '✅ Pengaturan berhasil disimpan!', 'success');
+                            // Update preview
+                            document.getElementById('previewSekolah').textContent = namaSekolah;
+                            document.getElementById('previewJudul').textContent = judulWebsite;
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        hasError = true;
+                        showMessage('messagePengaturan', 'Error: ' + error, 'error');
+                    })
+                    .updatePengaturan(item.jenis, item.nilai);
+            });
+        }
+        
+        function loadPengaturan() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(pengaturan) {
+                    document.getElementById('logoUrl').value = pengaturan.logo_url || '';
+                    document.getElementById('namaSekolah').value = pengaturan.nama_sekolah || '';
+                    document.getElementById('judulWebsite').value = pengaturan.judul_website || '';
+                    
+                    // Update preview
+                    const previewLogo = document.getElementById('previewLogoImg');
+                    const previewSekolah = document.getElementById('previewSekolah');
+                    const previewJudul = document.getElementById('previewJudul');
+                    
+                    if (pengaturan.logo_url) {
+                        previewLogo.src = pengaturan.logo_url;
+                        previewLogo.style.display = 'block';
+                    } else {
+                        previewLogo.style.display = 'none';
+                    }
+                    
+                    previewSekolah.textContent = pengaturan.nama_sekolah || 'SEKOLAH MENENGAH ATAS';
+                    previewJudul.textContent = pengaturan.judul_website || 'CBT ONLINE';
+                })
+                .withFailureHandler(function(error) {
+                    console.error('Error loading pengaturan:', error);
+                })
+                .getPengaturan();
+        }
+        
+        // ============================================
+        // FUNGSI HASIL UJIAN
+        // ============================================
+        
+        function loadHasilUjian() {
+            // Untuk versi sederhana, tampilkan pesan
+            const tbody = document.getElementById('hasilUjianList');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #666;">
+                        Fitur lengkap hasil ujian akan tersedia di update selanjutnya
+                    </td>
+                </tr>
+            `;
+        }
+        
+        // ============================================
+        // INISIALISASI
+        // ============================================
+        
+        window.onload = function() {
+            // Cek login admin
+            const adminData = JSON.parse(sessionStorage.getItem('adminData'));
+            if (!adminData) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Tampilkan nama admin
+            document.getElementById('adminName').textContent = adminData.username;
+            
+            // Load data awal
+            loadSiswa();
+            loadMapel();
+            loadMapelForSoal();
+            loadPengaturan();
+        };
+        
+        // Fungsi placeholder untuk fitur yang akan datang
+        function editSiswa(id, username, nama) {
+            alert(`Edit siswa: ${nama}\n\nFitur edit akan tersedia di update selanjutnya.`);
+        }
+        
+        function hapusSiswa(id, username) {
+            if (confirm(`Yakin ingin menghapus siswa: ${username}?`)) {
+                alert(`Siswa ${username} berhasil dihapus.\n\nFitur hapus akan tersedia di update selanjutnya.`);
+            }
+        }
+        
+        function editMapel(id, nama, waktu) {
+            alert(`Edit mata pelajaran: ${nama}\n\nFitur edit akan tersedia di update selanjutnya.`);
+        }
+        
+        function hapusMapel(id, nama) {
+            if (confirm(`Yakin ingin menghapus mata pelajaran: ${nama}?`)) {
+                alert(`Mata pelajaran ${nama} berhasil dihapus.\n\nFitur hapus akan tersedia di update selanjutnya.`);
+            }
+        }
+        
+        function editSoal(id) {
+            alert(`Edit soal ID: ${id}\n\nFitur edit soal akan tersedia di update selanjutnya.`);
+        }
+        
+        function hapusSoal(id) {
+            if (confirm(`Yakin ingin menghapus soal ini?`)) {
+                alert(`Soal berhasil dihapus.\n\nFitur hapus akan tersedia di update selanjutnya.`);
+            }
+        }
+        
+        function filterHasilUjian() {
+            alert('Fitur filter akan tersedia di update selanjutnya.');
+        }
+    </script>
+</body>
+</html>

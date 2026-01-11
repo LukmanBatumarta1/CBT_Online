@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Online - Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .school-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        .school-logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .school-name {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .website-title {
+            color: white;
+            font-size: 36px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-top: 0;
+            font-weight: bold;
+        }
+        
+        .login-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .login-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .login-title {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .message-box {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        @media (max-width: 768px) {
+            .login-box {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .website-title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="school-header" id="schoolHeader">
+        <img id="schoolLogo" class="school-logo" alt="Logo Sekolah">
+        <div class="school-name" id="schoolName">SEKOLAH MENENGAH ATAS</div>
+        <h1 id="websiteTitle" class="website-title">CBT ONLINE</h1>
+    </div>
+    
+    <div class="login-container">
+        <!-- Login Admin -->
+        <div class="login-box">
+            <h2 class="login-title">Login Admin</h2>
+            <p class="login-subtitle">Masuk sebagai administrator sistem</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="adminUsername" placeholder="Masukkan username admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="adminPassword" placeholder="Masukkan password admin">
+            </div>
+            <button class="btn-login" onclick="loginAdmin()">Login Admin</button>
+            <div id="adminMessage" class="message-box"></div>
+        </div>
+        
+        <!-- Login Siswa -->
+        <div class="login-box">
+            <h2 class="login-title">Login Siswa</h2>
+            <p class="login-subtitle">Masuk untuk mengikuti ujian</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="siswaUsername" placeholder="Masukkan username siswa">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="siswaPassword" placeholder="Masukkan password siswa">
+            </div>
+            <button class="btn-login" onclick="loginSiswa()">Login Siswa</button>
+            <div id="siswaMessage" class="message-box"></div>
+        </div>
+        
+        <!-- Lihat Hasil -->
+        <div class="login-box">
+            <h2 class="login-title">Lihat Hasil</h2>
+            <p class="login-subtitle">Lihat hasil ujian yang telah dikerjakan</p>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="hasilUsername" placeholder="Masukkan username siswa">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="hasilPassword" placeholder="Masukkan password siswa">
+            </div>
+            <button class="btn-login" onclick="lihatHasil()">Lihat Hasil</button>
+            <div id="hasilMessage" class="message-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load pengaturan saat halaman dimuat
+        window.onload = function() {
+            loadPengaturan();
+        };
+        
+        function loadPengaturan() {
+            try {
+                google.script.run.withSuccessHandler().withFailureHandler()
+                    .withSuccessHandler(function(pengaturan) {
+                        const logoImg = document.getElementById('schoolLogo');
+                        const schoolName = document.getElementById('schoolName');
+                        const websiteTitle = document.getElementById('websiteTitle');
+                        
+                        if (pengaturan.logo_url) {
+                            logoImg.src = pengaturan.logo_url;
+                            logoImg.style.display = 'block';
+                        } else {
+                            logoImg.style.display = 'none';
+                        }
+                        
+                        schoolName.textContent = pengaturan.nama_sekolah || 'SEKOLAH MENENGAH ATAS';
+                        websiteTitle.textContent = pengaturan.judul_website || 'CBT ONLINE';
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('Error loading pengaturan:', error);
+                    })
+                    .getPengaturan();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message-box ${type}`;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        function loginAdmin() {
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (!username || !password) {
+                showMessage('adminMessage', 'Harap isi username dan password', 'error');
+                return;
+            }
+            
+            if (username === 'Admin' && password === 'Admin1234') {
+                sessionStorage.setItem('adminData', JSON.stringify({ username: username }));
+                showMessage('adminMessage', 'Login berhasil! Mengalihkan...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 1000);
+            } else {
+                showMessage('adminMessage', 'Username atau password admin salah!', 'error');
+            }
+        }
+        
+        function loginSiswa() {
+            const username = document.getElementById('siswaUsername').value;
+            const password = document.getElementById('siswaPassword').value;
+            
+            if (!username || !password) {
+                showMessage('siswaMessage', 'Harap isi username dan password', 'error');
+                return;
+            }
+            
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        sessionStorage.setItem('userData', JSON.stringify(response.user));
+                        showMessage('siswaMessage', 'Login berhasil! Memuat mata pelajaran...', 'success');
+                        
+                        // Load mata pelajaran
+                        loadMapelForSiswa();
+                    } else {
+                        showMessage('siswaMessage', response.message, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('siswaMessage', 'Error: ' + error, 'error');
+                })
+                .loginUser(username, password);
+        }
+        
+        function loadMapelForSiswa() {
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(mapelList) {
+                    if (mapelList.length === 0) {
+                        showMessage('siswaMessage', 'Tidak ada mata pelajaran tersedia', 'error');
+                        return;
+                    }
+                    
+                    // Buat modal pilih mapel
+                    const modalHtml = `
+                        <div class="modal-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+                            <div class="modal-content" style="background: white; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%;">
+                                <h2 style="margin-bottom: 20px; color: #333;">Pilih Mata Pelajaran</h2>
+                                <p style="margin-bottom: 20px; color: #666;">Silakan pilih mata pelajaran yang akan diujikan:</p>
+                                <div id="mapelOptions" style="margin-bottom: 20px;"></div>
+                                <button onclick="closeModal()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                    Batal
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.insertAdjacentHTML('beforeend', modalHtml);
+                    
+                    const mapelOptions = document.getElementById('mapelOptions');
+                    mapelList.forEach(mapel => {
+                        const button = document.createElement('button');
+                        button.style.cssText = `
+                            display: block; width: 100%; padding: 15px; margin-bottom: 10px; 
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                            color: white; border: none; border-radius: 8px; cursor: pointer;
+                            font-size: 16px; font-weight: 600; text-align: left;
+                        `;
+                        button.innerHTML = `${mapel.nama_mapel} <small style="font-size: 14px; opacity: 0.9;">(${mapel.waktu_menit} menit)</small>`;
+                        button.onclick = function() {
+                            sessionStorage.setItem('mapelData', JSON.stringify(mapel));
+                            window.location.href = 'ujian.html';
+                        };
+                        mapelOptions.appendChild(button);
+                    });
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('siswaMessage', 'Error memuat mata pelajaran: ' + error, 'error');
+                })
+                .getAllMapel();
+        }
+        
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function lihatHasil() {
+            const username = document.getElementById('hasilUsername').value;
+            const password = document.getElementById('hasilPassword').value;
+            
+            if (!username || !password) {
+                showMessage('hasilMessage', 'Harap isi username dan password', 'error');
+                return;
+            }
+            
+            google.script.run.withSuccessHandler().withFailureHandler()
+                .withSuccessHandler(function(response) {
+                    if (response.success) {
+                        sessionStorage.setItem('userData', JSON.stringify(response.user));
+                        window.location.href = 'hasil.html';
+                    } else {
+                        showMessage('hasilMessage', response.message, 'error');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    showMessage('hasilMessage', 'Error: ' + error, 'error');
+                })
+                .loginUser(username, password);
+        }
+    </script>
+</body>
+</html>

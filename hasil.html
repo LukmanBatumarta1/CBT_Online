@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Ujian - CBT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .result-header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .school-logo-result {
+            max-width: 80px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        
+        .school-name-result {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .result-title {
+            color: #667eea;
+            font-size: 24px;
+            margin-top: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .score-value {
+            font-size: 48px;
+            margin-bottom: 5px;
+        }
+        
+        .score-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .result-details {
+            text-align: left;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .grade-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .history-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+        
+        .history-title {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .history-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-pass {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-fail {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .empty-history {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .result-card {
+                padding: 20px;
+            }
+            
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .score-value {
+                font-size: 36px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-header" id="resultHeader">
+        <img id="schoolLogoResult" class="school-logo-result" alt="Logo Sekolah">
+        <div class="school-name-result" id="schoolNameResult">SEKOLAH MENENGAH ATAS</div>
+        <h1 class="result-title" id="resultTitle">HASIL UJIAN</h1>
+    </div>
+    
+    <div class="container">
+        <div class="result-card">
+            <div id="currentResult">
+                <h2 style="color: #333; margin-bottom: 20px;">Hasil Ujian Terakhir</h2>
+                <div class="score-circle" id="scoreCircle">
+                    <div class="score-value" id="scoreValue">0</div>
+                    <div class="score-label">NILAI</div>
+                </div>
+                
+                <div class="grade-text" id="gradeText">Memuat...</div>
+                
+                <div class="result-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Nama Siswa:</span>
+                        <span class="detail-value" id="studentName">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Mata Pelajaran:</span>
+                        <span class="detail-value" id="subjectName">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Waktu Pengerjaan:</span>
+                        <span class="detail-value" id="workTime">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status Kelulusan:</span>
+                        <span class="detail-value" id="statusResult">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="noResult" style="display: none; padding: 40px;">
+                <h3 style="color: #666; margin-bottom: 20px;">Belum Ada Hasil Ujian</h3>
+                <p style="color: #666; margin-bottom: 30px;">Anda belum mengikuti ujian atau hasil belum tersedia.</p>
+            </div>
+            
+            <div class="button-group">
+                <a href="index.html" class="action-btn btn-primary">Kembali ke Login</a>
+                <button class="action-btn btn-secondary" onclick="showHistory()">Lihat Riwayat Ujian</button>
+                <button class="action-btn btn-success" onclick="printResult()">Cetak Hasil</button>
+            </div>
+        </div>
+        
+        <div class="history-section" id="historySection" style="display: none;">
+            <h2 class="history-title">Riwayat Ujian</h2>
+            <div id="historyContainer">
+                <table class="history-table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Mata Pelajaran</th>
+                            <th>Tanggal</th>
+                            <th>Nilai</th>
+                            <th>Waktu</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <!-- Data riwayat akan dimuat di sini -->
+                    </tbody>
+                </table>
+                <div id="emptyHistory" class="empty-history" style="display: none;">
+                    Tidak ada riwayat ujian
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // FUNGSI UTAMA
+        // ============================================
+        
+        window.onload = async function() {
+            // Load pengaturan sekolah
+            loadSchoolSettings();
+            
+            // Cek apakah ada data user
+            const userData = JSON.parse(sessionStorage.getItem('userData'));
+            
+            if (!userData) {
+                // Jika tidak ada userData, tampilkan login untuk melihat hasil
+                document.getElementById('currentResult').style.display = 'none';
+                document.getElementById('noResult').style.display = 'block';
+                return;
+            }
+            
+            // Tampilkan nama siswa
+            document.getElementById('studentName').textContent = userData.nama;
+            
+            // Cek apakah ada hasil ujian terakhir
+            const nilai = sessionStorage.getItem('nilai');
+            const waktuPengerjaan = sessionStorage.getItem('waktuPengerjaan');
+            const mapelData = JSON.parse(sessionStorage.getItem('mapelData'));
+            
+            if (nilai && mapelData) {
+                // Tampilkan hasil ujian terakhir
+                displayLastResult(userData, mapelData, nilai, waktuPengerjaan);
+            } else {
+                // Coba load riwayat dari database
+                loadUserHistory(userData.username);
+            }
+        };
+        
+        function loadSchoolSettings() {
+            try {
+                google.script.run.withSuccessHandler().withFailureHandler()
+                    .withSuccessHandler(function(pengaturan) {
+                        const logoImg = document.getElementById('schoolLogoResult');
+                        const schoolName = document.getElementById('schoolNameResult');
+                        const resultTitle = document.getElementById('resultTitle');
+                        
+                        if (pengaturan.logo_url) {
+                            logoImg.src = pengaturan.logo_url;
+                            logoImg.style.display = 'block';
+                        } else {
+                            logoImg.style.display = 'none';
+                        }
+                        
+                        schoolName.textContent = pengaturan.nama_sekolah || 'SEKOLAH MENENGAH ATAS';
+                        resultTitle.textContent = pengaturan.judul_website ? 
+                            `HASIL UJIAN ${pengaturan.judul_website}` : 'HASIL UJIAN CBT ONLINE';
+                    })
+                    .withFailureHandler(function(error) {
+                        console.error('Error loading settings:', error);
+                    })
+                    .getPengaturan();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function displayLastResult(user, mapel, nilai, waktu) {
+            const numericScore = parseFloat(nilai);
+            const roundedScore = Math.round(numericScore);
+            
+            // Update tampilan
+            document.getElementById('subjectName').textContent = mapel.nama_mapel;
+            document.getElementById('workTime').textContent = waktu + ' menit';
+            document.getElementById('scoreValue').textContent = roundedScore;
+            
+            // Tentukan status kelulusan
+            const isPass = numericScore >= 75;
+            const statusText = isPass ? 'LULUS' : 'TIDAK LULUS';
+            const statusClass = isPass ? 'status-pass' : 'status-fail';
+            
+            document.getElementById('statusResult').textContent = statusText;
+            document.getElementById('statusResult').className = statusClass;
+            
+            // Update warna score circle
+            const scoreCircle = document.getElementById('scoreCircle');
+            if (isPass) {
+                scoreCircle.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            } else {
+                scoreCircle.style.background = 'linear-gradient(135deg, #dc3545 0%, #fd7e14 100%)';
+            }
+            
+            // Tentukan grade text
+            let grade = '';
+            if (numericScore >= 90) grade = 'SANGAT MEMUASKAN (A)';
+            else if (numericScore >= 80) grade = 'MEMUASKAN (B)';
+            else if (numericScore >= 75) grade = 'CUKUP (C)';
+            else if (numericScore >= 60) grade = 'KURANG (D)';
+            else grade = 'SANGAT KURANG (E)';
+            
+            document.getElementById('gradeText').textContent = grade;
+            
+            // Sembunyikan pesan tidak ada hasil
+            document.getElementById('noResult').style.display = 'none';
+            document.getElementById('currentResult').style.display = 'block';
+        }
+        
+        async function loadUserHistory(username) {
+            try {
+                const history = await new Promise((resolve, reject) => {
+                    google.script.run.withSuccessHandler().withFailureHandler()
+                        .withSuccessHandler(resolve)
+                        .withFailureHandler(reject)
+                        .getHasilByUser(username);
+                });
+                
+                if (history.length > 0) {
+                    // Ambil hasil terakhir
+                    const lastResult = history[history.length - 1];
+                    const mapelData = { nama_mapel: lastResult.mapel };
+                    
+                    displayLastResult(
+                        { nama: 'Siswa' },
+                        mapelData,
+                        lastResult.nilai,
+                        lastResult.waktu
+                    );
+                    
+                    // Load riwayat untuk tabel
+                    loadHistoryTable(history);
+                } else {
+                    document.getElementById('currentResult').style.display = 'none';
+                    document.getElementById('noResult').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading history:', error);
+                document.getElementById('currentResult').style.display = 'none';
+                document.getElementById('noResult').style.display = 'block';
+            }
+        }
+        
+        function loadHistoryTable(history) {
+            const tbody = document.getElementById('historyBody');
+            const emptyDiv = document.getElementById('emptyHistory');
+            
+            if (history.length === 0) {
+                tbody.innerHTML = '';
+                emptyDiv.style.display = 'block';
+                return;
+            }
+            
+            emptyDiv.style.display = 'none';
+            tbody.innerHTML = '';
+            
+            // Urutkan dari terbaru ke terlama
+            history.reverse().forEach((item, index) => {
+                const row = document.createElement('tr');
+                const isPass = item.nilai >= 75;
+                const statusText = isPass ? 'LULUS' : 'TIDAK LULUS';
+                const statusClass = isPass ? 'status-pass' : 'status-fail';
+                
+                // Format tanggal
+                const date = new Date(item.tanggal);
+                const formattedDate = date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.mapel}</td>
+                    <td>${formattedDate}</td>
+                    <td>${Math.round(item.nilai)}</td>
+                    <td>${item.waktu} menit</td>
+                    <td class="${statusClass}">${statusText}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        function showHistory() {
+            const userData = JSON.parse(sessionStorage.getItem('userData'));
+            if (!userData) {
+                alert('Silakan login terlebih dahulu');
+                return;
+            }
+            
+            const historySection = document.getElementById('historySection');
+            if (historySection.style.display === 'none') {
+                historySection.style.display = 'block';
+                loadUserHistory(userData.username);
+                window.scrollTo(0, document.body.scrollHeight);
+            } else {
+                historySection.style.display = 'none';
+            }
+        }
+        
+        function printResult() {
+            const printContent = document.querySelector('.result-card').outerHTML;
+            const originalContent = document.body.innerHTML;
+            
+            document.body.innerHTML = `
+                <html>
+                    <head>
+                        <title>Cetak Hasil Ujian</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                            .score-circle { 
+                                width: 150px; height: 150px; border-radius: 50%; 
+                                display: flex; flex-direction: column; justify-content: center;
+                                align-items: center; color: white; margin: 20px auto;
+                            }
+                            .result-details { margin: 20px 0; }
+                            .detail-row { display: flex; justify-content: space-between; padding: 8px 0; }
+                            @media print {
+                                button { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent}
+                        <div style="text-align: center; margin-top: 30px; font-size: 12px; color: #666;">
+                            Dicetak pada: ${new Date().toLocaleString('id-ID')}
+                        </div>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                setTimeout(function() {
+                                    document.body.innerHTML = originalContent;
+                                    location.reload();
+                                }, 500);
+                            };
+                        <\/script>
+                    </body>
+                </html>
+            `;
+        }
+    </script>
+</body>
+</html>
